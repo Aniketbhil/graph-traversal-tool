@@ -20,7 +20,7 @@ A full-stack web application that demonstrates **Breadth-First Search (BFS)** an
 ---
 
 ## 🧱 Project Structure
-
+```bash
 graph-traversal-tool/
 │
 ├── backend/
@@ -34,6 +34,7 @@ graph-traversal-tool/
 │ └── index.css
 ├── vite.config.js
 └── package.json
+```
 
 
 ---
