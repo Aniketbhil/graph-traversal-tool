@@ -48,11 +48,13 @@ pip install -r requirements.txt
 python app.py
 
 The backend will start at http://localhost:5000
+```
+
 
 2️⃣ Frontend (React)
 
 Open another terminal:
-
+```bash
 cd frontend
 npm install
 npm run dev
