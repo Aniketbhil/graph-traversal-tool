@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import GraphVisualizer from "./GraphVisualizer";
 
 export default function App() {
-  const [vertices, setVertices] = useState(5); // number of vertices (A..)
+  const [vertices, setVertices] = useState(5);
   const [edges, setEdges] = useState("A B\nA C\nB D\nC E");
-  const [representation, setRepresentation] = useState("list"); // "list" or "matrix"
+  const [representation, setRepresentation] = useState("list"); 
   const [startNode, setStartNode] = useState("A");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,6 @@ export default function App() {
     setErrorMsg("");
     setResult(null);
 
-    // Basic validation
     const n = Number(vertices);
     if (!Number.isFinite(n) || n < 1 || n > 26) {
       setErrorMsg("Vertices must be a number between 1 and 26.");
@@ -47,12 +47,12 @@ export default function App() {
 
       const data = await res.json();
       setResult(data);
+
     } catch (err) {
       console.error(err);
-      // Friendly error message
       setErrorMsg(
         err.message.includes("Failed to fetch")
-          ? "Failed to connect to backend. Is Flask running on http://localhost:5000 ? (Enable CORS with flask-cors if needed.)"
+          ? "Failed to connect to backend. Is Flask running on http://localhost:5000 ?"
           : err.message
       );
     } finally {
@@ -115,29 +115,39 @@ export default function App() {
             <button style={styles.btn} onClick={() => handleTraversal("bfs")} disabled={loading}>
               {loading ? "Running..." : "Run BFS"}
             </button>
-            <button style={{ ...styles.btn, background: "#059669" }} onClick={() => handleTraversal("dfs")} disabled={loading}>
+            <button
+              style={{ ...styles.btn, background: "#059669" }}
+              onClick={() => handleTraversal("dfs")}
+              disabled={loading}
+            >
               {loading ? "Running..." : "Run DFS"}
             </button>
           </div>
 
           {errorMsg && <div style={styles.error}>{errorMsg}</div>}
+
           <div style={styles.hint}>
             Hint: Use letters A..Z for vertices. Example edges:
             <pre style={styles.pre}>A B{"\n"}A C{"\n"}B D</pre>
           </div>
         </div>
 
+        {/* RIGHT SIDE RESULTS CARD */}
         <div style={styles.card}>
           <h3>Result</h3>
+
           {!result && <div style={styles.muted}>No traversal run yet.</div>}
-          {result && result.error && <div style={styles.error}>{result.error}</div>}
+
+          {result && result.error && (
+            <div style={styles.error}>{result.error}</div>
+          )}
+
           {result && !result.error && (
             <>
               <div><strong>Order:</strong> {JSON.stringify(result.order)}</div>
-              <div style={{ marginTop: 8 }}>
-                <strong>Steps:</strong>
-                <pre style={styles.preSmall}>{JSON.stringify(result.steps, null, 2)}</pre>
-              </div>
+
+              {/* 🔥 GRAPH VISUALIZER HERE */}
+              <GraphVisualizer edges={edges} order={result.order} />
             </>
           )}
         </div>
@@ -146,7 +156,6 @@ export default function App() {
   );
 }
 
-// Inline simple styles so you can paste without extra files
 const styles = {
   container: {
     fontFamily: "Inter, system-ui, sans-serif",
@@ -231,14 +240,6 @@ const styles = {
     padding: 8,
     borderRadius: 6,
     marginTop: 6,
-  },
-  preSmall: {
-    background: "#111827",
-    color: "#f8fafc",
-    padding: 12,
-    borderRadius: 6,
-    marginTop: 8,
-    overflowX: "auto",
   },
   muted: { color: "#6b7280" },
 };
